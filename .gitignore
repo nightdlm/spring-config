@@ -1,7 +1,7 @@
 HELP.md
 target/
 config/
-config-vue2-ui/node_modules/
+config-vue3-ui/node_modules/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
