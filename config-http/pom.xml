@@ -20,6 +20,13 @@
         <dependency>
             <groupId>io.spring.config</groupId>
             <artifactId>spring-config</artifactId>
+<!--            不需要使用远程配置的时候排除这个，否则需要引入-->
+<!--            <exclusions>-->
+<!--                <exclusion>-->
+<!--                    <groupId>io.spring.config</groupId>-->
+<!--                    <artifactId>config-core</artifactId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
