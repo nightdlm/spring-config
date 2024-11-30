@@ -18,6 +18,14 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+        </dependency>
+        <dependency>
             <groupId>io.spring.config</groupId>
             <artifactId>spring-config</artifactId>
 <!--            不需要使用远程配置的时候排除这个，否则需要引入-->

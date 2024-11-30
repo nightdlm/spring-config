@@ -6,7 +6,6 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-@JsonIgnoreProperties
 public class ServerValueParam {
 
     private String value;
