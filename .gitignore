@@ -1,6 +1,5 @@
 HELP.md
 target/
-config/
 config-vue3-ui/node_modules/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
