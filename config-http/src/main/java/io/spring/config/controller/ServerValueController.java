@@ -9,10 +9,7 @@ import io.spring.config.service.IServerConfigService;
 import io.spring.config.service.ISpringConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
@@ -22,6 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/value")
 @Valid
+@CrossOrigin
 public class ServerValueController {
     @Autowired
     private ISpringConfigService iSpringConfigService;

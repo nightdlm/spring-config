@@ -11,6 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/name")
+@CrossOrigin
 public class ServerNameController {
 
     @Autowired

@@ -80,6 +80,10 @@ public class AnnotationConfiguration implements BeanPostProcessor {
                 return (T) Double.valueOf(value);
             } else if (targetType == Float.class || targetType == float.class) {
                 return (T) Float.valueOf(value);
+            } else if (targetType == Character.class || targetType == char.class) {
+                return (T) Character.valueOf(value.charAt(0));
+            } else if (targetType == Byte.class || targetType == byte.class) {
+                return (T) Byte.valueOf(value);
             } else if (targetType == List.class) {
                 return (T)JSON.parseObject(value,List.class);
             } else if (targetType == Map.class) {
