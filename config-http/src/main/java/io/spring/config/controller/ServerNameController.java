@@ -2,20 +2,26 @@ package io.spring.config.controller;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import io.spring.config.domain.ServerConfig;
+import io.spring.config.domain.SpringConfig;
 import io.spring.config.response.ApiResponse;
 import io.spring.config.service.IServerConfigService;
+import io.spring.config.service.ISpringConfigService;
+import io.spring.core.param.ServerValueParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/name")
+@RequestMapping("/api")
 @CrossOrigin
 public class ServerNameController {
 
     @Autowired
     private IServerConfigService iServerConfigService;
+
+    @Autowired
+    private ISpringConfigService iSpringConfigService;
 
     @PostMapping("/createServer")
     public ApiResponse<Void> createServer(String serverName) {
@@ -36,17 +42,15 @@ public class ServerNameController {
 
     @PostMapping("/deleteServer")
     public ApiResponse<Void> deleteServer(Integer id) {
-        iServerConfigService.removeById(id);
+        if (iSpringConfigService.exists(Wrappers.lambdaQuery(SpringConfig.class).eq(SpringConfig::getServerId,id)))
+            throw new RuntimeException("不可删除存在配置的服务");
+        if (!iServerConfigService.removeById(id)) throw new RuntimeException("删除失败");
         return ApiResponse.success();
     }
 
-    @PostMapping("/getServer")
-    public ApiResponse<List<String>> getServer(String serverName) {
-        List<String> list = iServerConfigService.listObjs(
-                Wrappers.lambdaQuery(ServerConfig.class)
-                        .select(ServerConfig::getServerName)
-                        .like(serverName != null && !"".equals(serverName.trim()), ServerConfig::getServerName, serverName)
-        );
+    @PostMapping("/getServerList")
+    public ApiResponse<List<ServerConfig>> getServer() {
+        List<ServerConfig> list = iServerConfigService.list();
         return ApiResponse.of(list);
     }
 }

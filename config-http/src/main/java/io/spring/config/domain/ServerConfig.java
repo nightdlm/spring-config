@@ -34,5 +34,7 @@ public class ServerConfig implements Serializable {
     @TableField("server_name")
     private String serverName;
 
+    @TableField("is_del")
+    private Boolean isDel;
 
 }
