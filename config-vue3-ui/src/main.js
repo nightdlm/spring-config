@@ -16,9 +16,9 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
     (response) => {
         if (response.data.code === 0) {
-            console.log(response.data)
             return response;
         } else {
+            console.log(response.data)
             ElMessage.error(response.data.message);
         }
     }, () => {

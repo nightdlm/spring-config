@@ -2,6 +2,7 @@ package io.spring.config.controller;
 
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import io.spring.config.constant.DynamicConstant;
 import io.spring.config.domain.SpringConfig;
 import io.spring.config.request.UpdateConfig;
 import io.spring.config.response.ApiResponse;
@@ -35,49 +36,46 @@ public class ServerValueController {
         return ApiResponse.of(iSpringConfigService.list(
                 Wrappers.lambdaQuery(SpringConfig.class)
                 .eq(SpringConfig::getServerId,id)
+                .orderByDesc(SpringConfig::getCreateTime)
         ));
     }
 
-    @PostMapping("/update")
-    public ApiResponse<Void> update(@RequestBody UpdateConfig updateConfig) {
-        SpringConfig config = new SpringConfig();
-        config.setId(updateConfig.getId());
-        config.setConfigKey(updateConfig.getKey());
-        config.setValue(updateConfig.getValue());
-        config.setUpdateTime(LocalDateTime.now());
-        config.setCreateTime(LocalDateTime.now());
-        config.setDescription(updateConfig.getDesc());
-        boolean b = iSpringConfigService.updateById(config);
-        if (b){
-            SpringConfig service = iSpringConfigService.getById(updateConfig.getId());
-            HashMap<String, String> map = new HashMap<>();
-            map.put(updateConfig.getKey(), updateConfig.getValue());
-            redisTemplate.convertAndSend(iServerConfigService.getById(service.getServerId()).getServerName(),JSON.toJSONString(map));
-        }
-        return ApiResponse.success();
-    }
-
-    @PostMapping("/delete")
-    public ApiResponse<Void> delete(Integer id) {
+    @DeleteMapping("/delete/{id}")
+    public ApiResponse<Void> delete(@PathVariable Integer id) {
         iSpringConfigService.removeById(id);
         return ApiResponse.success();
     }
 
-    @PostMapping("/create")
+    @PostMapping("/updateInfo")
     public ApiResponse<Void> create(@RequestBody UpdateConfig updateConfig){
+
+        //处理重复key
+        if (updateConfig.getId()==null && iSpringConfigService.exists(Wrappers.lambdaQuery(SpringConfig.class)
+                .eq(SpringConfig::getServerId,updateConfig.getServerId())
+                .eq(SpringConfig::getConfigKey,updateConfig.getKey()))) {
+            throw new IllegalArgumentException(updateConfig.getKey()+"已存在");
+        }
+
         SpringConfig config = new SpringConfig();
-        config.setServerId(updateConfig.getId());
+        config.setId(updateConfig.getId());
+        config.setServerId(updateConfig.getServerId());
         config.setConfigKey(updateConfig.getKey());
         config.setValue(updateConfig.getValue());
         config.setUpdateTime(LocalDateTime.now());
         config.setCreateTime(LocalDateTime.now());
         config.setDescription(updateConfig.getDesc());
-        boolean save = iSpringConfigService.save(config);
-        if (save){
-            HashMap<String, String> map = new HashMap<>();
-            map.put(updateConfig.getKey(), updateConfig.getValue());
-            redisTemplate.convertAndSend(iServerConfigService.getById(updateConfig.getId()).getServerName(), JSON.toJSONString(map));
-        }
+        iSpringConfigService.saveOrUpdate(config);
+        return ApiResponse.success();
+    }
+
+    //发布配置
+    @GetMapping("/publish/{id}")
+    public ApiResponse<Void> publishValue(@PathVariable Integer id){
+        System.out.println(DynamicConstant.test_string);
+        SpringConfig springConfig = iSpringConfigService.getById(id);
+        HashMap<String, String> map = new HashMap<>();
+        map.put(springConfig.getConfigKey(), springConfig.getValue());
+        redisTemplate.convertAndSend(iServerConfigService.getById(springConfig.getServerId()).getServerName(),JSON.toJSONString(map));
         return ApiResponse.success();
     }
 

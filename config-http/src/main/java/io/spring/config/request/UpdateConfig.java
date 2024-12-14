@@ -7,8 +7,10 @@ import javax.validation.constraints.NotNull;
 @Data
 public class UpdateConfig {
 
-    @NotNull(message = "id不能为空")
     private Integer id;
+
+    @NotNull(message = "服务id不能为空")
+    private Integer serverId;
 
     @NotNull(message = "key字段不能为空")
     private String key;

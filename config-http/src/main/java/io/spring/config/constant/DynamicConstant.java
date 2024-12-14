@@ -30,4 +30,7 @@ public class DynamicConstant {
 
     @DynamicConfig("test_float:85.65")
     public static volatile Float test_float;
+
+    @DynamicConfig("test_string:你号")
+    public static volatile String test_string;
 }

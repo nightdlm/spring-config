@@ -23,7 +23,7 @@
         <el-table-column fixed="right" label="操作" min-width="120" width="200px">
           <template #default="scope">
             <el-button link type="primary" size="small" @click="delServer(scope.row.id)">删除</el-button>
-            <el-button link type="primary" size="small">编辑</el-button>
+<!--            <el-button link type="primary" size="small">编辑</el-button>-->
           </template>
         </el-table-column>
       </el-table>
