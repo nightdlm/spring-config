@@ -14,16 +14,15 @@ axios.interceptors.request.use(
 )
 
 axios.interceptors.response.use(
-    (response,error) => {
-        if (error) {
-            ElMessage.error("请求异常");
+    (response) => {
+        if (response.data.code === 0) {
+            console.log(response.data)
+            return response;
         } else {
-            if (response.data.code === 0) {
-                return response;
-            } else {
-                ElMessage.error(response.data.message);
-            }
+            ElMessage.error(response.data.message);
         }
+    }, () => {
+        ElMessage.error("请求异常");
     }
 )
 app.config.globalProperties.$axios = axios;

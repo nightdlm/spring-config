@@ -25,6 +25,8 @@ public class ServerNameController {
 
     @PostMapping("/createServer")
     public ApiResponse<Void> createServer(String serverName) {
+        if (iServerConfigService.exists(Wrappers.lambdaQuery(ServerConfig.class).eq(ServerConfig::getServerName,serverName)))
+            throw new RuntimeException("存在同名服务");
         ServerConfig serverConfig = new ServerConfig();
         serverConfig.setServerName(serverName);
         iServerConfigService.save(serverConfig);

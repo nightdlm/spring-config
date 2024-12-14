@@ -30,8 +30,8 @@ public class ServerValueController {
     @Autowired
     private IServerConfigService iServerConfigService;
 
-    @PostMapping("/getList")
-    public ApiResponse<List<SpringConfig>> getList(Integer id) {
+    @PostMapping("/getList/{id}")
+    public ApiResponse<List<SpringConfig>> getList(@PathVariable Integer id) {
         return ApiResponse.of(iSpringConfigService.list(
                 Wrappers.lambdaQuery(SpringConfig.class)
                 .eq(SpringConfig::getServerId,id)
