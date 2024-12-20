@@ -1,18 +1,13 @@
 package io.spring.config.impl;
 
 import com.alibaba.fastjson2.JSON;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import io.spring.config.annotation.DynamicConfig;
 import io.spring.config.annotation.UnityClass;
 import io.spring.config.response.ResponseParam;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;

@@ -1,6 +1,5 @@
 package io.spring.core.param;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import java.time.LocalDateTime;
