@@ -5,7 +5,7 @@
     <parent>
         <artifactId>config-dynamic-parent</artifactId>
         <groupId>io.github.nightdlm</groupId>
-        <version>0.1.0</version>
+        <version>0.1.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -28,13 +28,6 @@
         <dependency>
             <groupId>io.github.nightdlm</groupId>
             <artifactId>dynamic-spring-boot-config</artifactId>
-            <!--            不需要使用远程配置的时候排除这个，否则需要引入-->
-<!--            <exclusions>-->
-<!--                <exclusion>-->
-<!--                    <groupId>io.spring.config</groupId>-->
-<!--                    <artifactId>config-core</artifactId>-->
-<!--                </exclusion>-->
-<!--            </exclusions>-->
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

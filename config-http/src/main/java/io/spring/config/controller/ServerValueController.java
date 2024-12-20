@@ -2,7 +2,6 @@ package io.spring.config.controller;
 
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import io.spring.config.constant.DynamicConstant;
 import io.spring.config.domain.SpringConfig;
 import io.spring.config.request.UpdateConfig;
 import io.spring.config.response.ApiResponse;
@@ -71,7 +70,6 @@ public class ServerValueController {
     //发布配置
     @GetMapping("/publish/{id}")
     public ApiResponse<Void> publishValue(@PathVariable Integer id){
-        System.out.println(DynamicConstant.test_string);
         SpringConfig springConfig = iSpringConfigService.getById(id);
         HashMap<String, String> map = new HashMap<>();
         map.put(springConfig.getConfigKey(), springConfig.getValue());

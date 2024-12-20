@@ -1,1 +1,2 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=io.spring.core.component.RedisConfig,io.spring.core.component.RedisMessageListener
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  io.spring.core.component.RedisMessageListener

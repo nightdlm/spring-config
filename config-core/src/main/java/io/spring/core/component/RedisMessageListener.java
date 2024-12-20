@@ -1,17 +1,27 @@
 package io.spring.core.component;
 
 import com.alibaba.fastjson2.JSON;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.listener.PatternTopic;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
+import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Component
 public class RedisMessageListener implements MessageListener {
+
+    @Autowired
+    private Environment environment;
 
     @Resource
     private Map<String, Field> contentManager;
@@ -64,5 +74,16 @@ public class RedisMessageListener implements MessageListener {
         catch (Exception e) {
             throw new RuntimeException("Invalid value for type " + targetType + ": " + field.getName() + ":" + value, e);
         }
+    }
+
+    @Bean
+    RedisMessageListenerContainer redisContainer(RedisConnectionFactory connectionFactory, RedisMessageListener listener) {
+        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+        container.setConnectionFactory(connectionFactory);
+        final String property = environment.getProperty("spring.config.dynamic.server-name");
+        if (property==null)
+            throw new RuntimeException("spring.config.dynamic.server-name"+" must exists");
+        container.addMessageListener(new MessageListenerAdapter(listener), new PatternTopic(property));
+        return container;
     }
 }

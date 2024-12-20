@@ -5,7 +5,7 @@
     <groupId>io.github.nightdlm</groupId>
     <artifactId>config-dynamic-parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.1.0</version>
+    <version>0.1.1</version>
     <modules>
         <module>spring-config</module>
         <module>config-core</module>
@@ -14,7 +14,7 @@
 
     <name>config-dynamic-parent</name>
     <description>配置统一管理parent包</description>
-    <url>https://github.com/1790818487/spring-config</url>
+    <url>https://github.com/nightdlm/spring-config</url>
 
     <licenses>
         <license>
@@ -31,9 +31,9 @@
 
 
     <scm>
-        <connection>https://github.com/1790818487/spring-config.git</connection>
-        <developerConnection>git@github.com:1790818487/spring-config.git</developerConnection>
-        <url>https://github.com/1790818487/spring-config</url>
+        <connection>https://github.com/nightdlm/spring-config.git</connection>
+        <developerConnection>git@github.com:nightdlm/spring-config.git</developerConnection>
+        <url>https://github.com/nightdlm/spring-config</url>
     </scm>
 
     <properties>
@@ -73,12 +73,12 @@
             <dependency>
                 <groupId>io.github.nightdlm</groupId>
                 <artifactId>dynamic-spring-boot-config</artifactId>
-                <version>0.1.0</version>
+                <version>0.1.1</version>
             </dependency>
             <dependency>
                 <groupId>io.github.nightdlm</groupId>
                 <artifactId>config-core</artifactId>
-                <version>0.1.0</version>
+                <version>0.1.1</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -179,15 +179,15 @@
 <!--                        <executable>D:\\Program Files (x86)\\Gpg4win\\bin\\gpg.exe</executable>-->
 <!--                        <keyname>dengliming</keyname>-->
 <!--                    </configuration>-->
-                    <executions>
-                        <execution>
-                            <id>sign-artifacts</id>
-                            <phase>verify</phase>
-                            <goals>
-                                <goal>sign</goal>
-                            </goals>
-                        </execution>
-                    </executions>
+<!--                    <executions>-->
+<!--                        <execution>-->
+<!--                            <id>sign-artifacts</id>-->
+<!--                            <phase>verify</phase>-->
+<!--                            <goals>-->
+<!--                                <goal>sign</goal>-->
+<!--                            </goals>-->
+<!--                        </execution>-->
+<!--                    </executions>-->
                 </plugin>
 
             </plugins>

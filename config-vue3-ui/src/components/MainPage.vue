@@ -1,7 +1,7 @@
 <template>
   <div class="common-layout" id="main">
     <el-container class="parent-container">
-      <el-header>
+      <el-header style="border-bottom: solid 1px;">
        <ShowHeader/>
       </el-header>
       <el-container class="child_main">
@@ -44,7 +44,6 @@ export default {
 .parent-container {
   position: fixed;
   inset: 0;
-  background-color: aquamarine;
 }
 
 .child_main {

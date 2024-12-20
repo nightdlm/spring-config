@@ -10,7 +10,7 @@
             <groupId>io.spring.config</groupId>
             <artifactId>spring-config</artifactId>
             <version>0.1.0</version>
-<!--            不需要使用远程配置的时候可以排除这个，否则需要引入-->
+<!--            不需要使用远程配置的时候需要排除这个，否则需要引入-->
 <!--            <exclusions>-->
 <!--                <exclusion>-->
 <!--                    <groupId>io.spring.config</groupId>-->

@@ -51,7 +51,8 @@
 <!--  添加弹出框-->
   <el-dialog title="添加配置" v-model="dialogVisible" width="40%">
 
-    <table >
+    <table>
+      <tbody>
       <tr>
         <td>key:</td>
         <td>
@@ -86,6 +87,7 @@
         <td style="vertical-align: top; text-align: left; min-width:100px;">值描述:</td>
         <td style="width: 100%;"><el-input resize="none" size="large" type="textarea" v-model="desc" placeholder="说明信息" rows=4></el-input></td>
       </tr>
+      </tbody>
     </table>
 
     <template #footer>

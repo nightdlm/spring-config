@@ -28,11 +28,14 @@ public class AnnotationConfiguration implements BeanPostProcessor {
     @Resource
     private Environment environment;
 
-    @Resource
-    private Map<String,Field> contentManager;
+    private static final RestTemplate restTemplate = new RestTemplate();
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private static final Map<String, Field> contentManager = new HashMap<>();
+
+    @Bean
+    public Map<String, Field> contentManager() {
+        return contentManager;
+    }
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
