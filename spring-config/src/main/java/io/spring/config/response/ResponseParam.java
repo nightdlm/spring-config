@@ -1,6 +1,5 @@
 package io.spring.config.response;
 
-import java.util.List;
 import java.util.Map;
 
 public class ResponseParam {
