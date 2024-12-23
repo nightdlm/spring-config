@@ -61,7 +61,6 @@ public class ServerValueController {
         config.setConfigKey(updateConfig.getKey());
         config.setValue(updateConfig.getValue());
         config.setUpdateTime(LocalDateTime.now());
-        config.setCreateTime(LocalDateTime.now());
         config.setDescription(updateConfig.getDesc());
         iSpringConfigService.saveOrUpdate(config);
         return ApiResponse.success();
