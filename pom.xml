@@ -5,7 +5,7 @@
     <groupId>io.github.nightdlm</groupId>
     <artifactId>config-dynamic-parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.1.2-SNAPSHOT</version>
+    <version>0.1.2</version>
     <modules>
         <module>spring-config</module>
         <module>config-core</module>
@@ -78,12 +78,12 @@
             <dependency>
                 <groupId>io.github.nightdlm</groupId>
                 <artifactId>dynamic-spring-boot-config</artifactId>
-                <version>0.1.2-SNAPSHOT</version>
+                <version>0.1.2</version>
             </dependency>
             <dependency>
                 <groupId>io.github.nightdlm</groupId>
                 <artifactId>config-core</artifactId>
-                <version>0.1.2-SNAPSHOT</version>
+                <version>0.1.2</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -167,7 +167,7 @@
                     <artifactId>maven-gpg-plugin</artifactId>
                     <version>1.5</version>
                     <configuration>
-                        <skip>true</skip>
+<!--                        <skip>true</skip>-->
                         <keyname>dengliming</keyname>
                     </configuration>
                     <executions>

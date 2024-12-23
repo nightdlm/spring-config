@@ -4,13 +4,13 @@
     <parent>
         <artifactId>config-dynamic-parent</artifactId>
         <groupId>io.github.nightdlm</groupId>
-        <version>0.1.2-SNAPSHOT</version>
+        <version>0.1.2</version>
     </parent>
     <packaging>jar</packaging>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>config-core</artifactId>
-    <version>0.1.2-SNAPSHOT</version>
+    <version>0.1.2</version>
 
     <name>config-core</name>
     <description>配置统一管理核心</description>
