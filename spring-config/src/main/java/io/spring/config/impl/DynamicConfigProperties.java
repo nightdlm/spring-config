@@ -6,6 +6,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class DynamicConfigProperties {
 
     /**
+     * 是否开启远程获取
+     */
+    private Boolean enableRemote=false;
+
+    /**
      * 服务名称
      */
     private String serverName;
@@ -29,5 +34,13 @@ public class DynamicConfigProperties {
 
     public void setServerName(String serverName) {
         this.serverName = serverName;
+    }
+
+    public Boolean getEnableRemote() {
+        return enableRemote;
+    }
+
+    public void setEnableRemote(Boolean enableRemote) {
+        this.enableRemote = enableRemote;
     }
 }

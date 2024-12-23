@@ -5,11 +5,11 @@
     <groupId>io.github.nightdlm</groupId>
     <artifactId>config-dynamic-parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.1.1</version>
+    <version>0.1.2-SNAPSHOT</version>
     <modules>
         <module>spring-config</module>
         <module>config-core</module>
-        <module>config-http</module>
+<!--        <module>config-http</module>-->
     </modules>
 
     <name>config-dynamic-parent</name>
@@ -55,6 +55,12 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-web</artifactId>
+                <version>5.3.24</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
                 <version>3.5.5</version>
@@ -72,12 +78,12 @@
             <dependency>
                 <groupId>io.github.nightdlm</groupId>
                 <artifactId>dynamic-spring-boot-config</artifactId>
-                <version>0.1.1</version>
+                <version>0.1.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>io.github.nightdlm</groupId>
                 <artifactId>config-core</artifactId>
-                <version>0.1.1</version>
+                <version>0.1.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -116,18 +122,6 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <version>${spring-boot.version}</version>
-                    <configuration>
-                        <mainClass>com.spring.config.ConfigApplication</mainClass>
-<!--                        <skip>true</skip>-->
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>repackage</id>
-                            <goals>
-                                <goal>repackage</goal>
-                            </goals>
-                        </execution>
-                    </executions>
                 </plugin>
                 <!--   central发布插件    -->
                 <plugin>
@@ -173,8 +167,7 @@
                     <artifactId>maven-gpg-plugin</artifactId>
                     <version>1.5</version>
                     <configuration>
-<!--                        <skip>true</skip>-->
-<!--                        <executable>D:\\Program Files (x86)\\Gpg4win\\bin\\gpg.exe</executable>-->
+                        <skip>true</skip>
                         <keyname>dengliming</keyname>
                     </configuration>
                     <executions>

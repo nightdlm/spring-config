@@ -1,2 +1,3 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=io.spring.config.impl.AnnotationConfiguration,io.spring.config.impl.DynamicConfigProperties
-org.springframework.boot.context.properties.EnableConfigurationProperties=io.spring.config.param.DynamicConfigurations
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  io.spring.config.impl.AnnotationConfiguration,\
+  io.spring.config.impl.DynamicConfigProperties

@@ -4,12 +4,13 @@
     <parent>
         <artifactId>config-dynamic-parent</artifactId>
         <groupId>io.github.nightdlm</groupId>
-        <version>0.1.1</version>
+        <version>0.1.2-SNAPSHOT</version>
     </parent>
+    <packaging>jar</packaging>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>config-core</artifactId>
-    <version>0.1.1</version>
+    <version>0.1.2-SNAPSHOT</version>
 
     <name>config-core</name>
     <description>配置统一管理核心</description>
@@ -21,11 +22,9 @@
     </properties>
     <dependencies>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <scope>provided</scope>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
         </dependency>
-
         <dependency>
             <groupId>com.alibaba.fastjson2</groupId>
             <artifactId>fastjson2</artifactId>
