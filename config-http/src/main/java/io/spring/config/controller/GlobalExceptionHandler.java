@@ -16,6 +16,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ApiResponse<Map<String,Object>> exceptionHandler(Exception e) {
+        e.printStackTrace();
         return ApiResponse.error(400, e.getMessage());
     }
 

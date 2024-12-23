@@ -15,6 +15,7 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 
 import javax.annotation.Resource;
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.Map;
 
 @ConditionalOnProperty(prefix = "spring.config.dynamic",name = "enable-remote",havingValue = "true")
@@ -44,10 +45,7 @@ public class RedisMessageListener implements MessageListener {
     RedisMessageListenerContainer redisContainer(RedisConnectionFactory connectionFactory, RedisMessageListener listener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        final String property = environment.getProperty("spring.config.dynamic.server-name");
-        if (property==null)
-            throw new RuntimeException("spring.config.dynamic.server-name"+" must exists");
-        container.addMessageListener(new MessageListenerAdapter(listener), new PatternTopic(property));
+        container.addMessageListener(new MessageListenerAdapter(listener), new PatternTopic(environment.getRequiredProperty("spring.config.dynamic.server-name")));
         return container;
     }
 }

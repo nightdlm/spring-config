@@ -19,7 +19,11 @@ public class ConfigUtils {
             } else if (targetType == Long.class || targetType == long.class) {
                 field.setLong(null,Long.parseLong(value));
             } else if (targetType == Boolean.class || targetType == boolean.class) {
-                field.setBoolean(null,Boolean.parseBoolean(value));
+                if (targetType == Boolean.class) {
+                    field.set(null, Boolean.valueOf(value));
+                } else {
+                    field.setBoolean(null, Boolean.parseBoolean(value));
+                }
             } else if (targetType == Double.class || targetType == double.class) {
                 field.setDouble(null,Double.parseDouble(value));
             } else if (targetType == Float.class || targetType == float.class) {

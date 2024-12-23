@@ -51,7 +51,7 @@ public class AnnotationConfiguration implements BeanPostProcessor {
                 ResponseParam param = new ResponseParam();
                 final RestTemplate restTemplate = new RestTemplate();
                 try {
-                     param=restTemplate.getForObject(baseUrl + "/config/getAllValue?serviceName=" + servername, ResponseParam.class);
+                     param=restTemplate.getForObject(baseUrl + "/api/v1/getAllValue?serviceName=" + servername, ResponseParam.class);
                  } catch (Exception e) {
                      e.printStackTrace();
                      System.out.println("请确认"+baseUrl+"的正确性");
@@ -76,22 +76,22 @@ public class AnnotationConfiguration implements BeanPostProcessor {
                         //远程查询值，存在就直接用
                         if (hashMap.getOrDefault(config_properties, null)!=null){
                             ConfigUtils.convert(field, hashMap.get(config_properties));
-                            continue;
+                        } else {
+                            final String environmentProperty = environment.getProperty(config_properties);
+                            if (environmentProperty == null)
+                                throw new RuntimeException("\"" + config_properties + "\" 值未配置");
+                            ConfigUtils.convert(field, environmentProperty);
                         }
-                        final String environmentProperty = environment.getProperty(config_properties);
-                        if (environmentProperty == null)
-                            throw new RuntimeException("\"" + config_properties + "\" 值未配置");
-                        ConfigUtils.convert(field, environmentProperty);
                     } else {
                         final String key = config_properties.substring(0, config_properties.indexOf(":"));
                         //远程查询值，存在就直接用
                         if (hashMap.getOrDefault(key, null)!=null){
                             ConfigUtils.convert(field, hashMap.get(key));
-                            continue;
+                        } else {
+                            final String value = config_properties.substring(config_properties.indexOf(":") + 1);
+                            final String property_value = environment.getProperty(key);
+                            ConfigUtils.convert(field, property_value != null ? property_value : value);
                         }
-                        final String value = config_properties.substring(config_properties.indexOf(":") + 1);
-                        final String property_value = environment.getProperty(key);
-                        ConfigUtils.convert(field, property_value != null ? property_value : value);
                     }
                     contentManager.put(config_properties.split(":")[0], field);
                 }
