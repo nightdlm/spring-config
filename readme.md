@@ -6,11 +6,11 @@
 
 引入依赖：
 ```
-        <dependency>
-            <groupId>io.spring.config</groupId>
-            <artifactId>spring-config</artifactId>
-            <version>0.1.2</version>
-        </dependency>
+<dependency>
+    <groupId>io.github.nightdlm</groupId>
+    <artifactId>dynamic-spring-boot-config</artifactId>
+    <version>0.1.2</version>
+</dependency>
 ```
 ## 项目使用技术版本
 - spring-boot 2.6.13
