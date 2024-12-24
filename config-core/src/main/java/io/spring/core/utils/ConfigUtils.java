@@ -38,7 +38,7 @@ public class ConfigUtils {
                 field.set(null,JSON.parseObject(value,Map.class));
             }
             else {
-                throw new IllegalArgumentException("Unsupported target type: " + targetType);
+                field.set(null,JSON.parseObject(value,targetType));
             }
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Invalid value for type " + targetType + ": " + field.getName() + ":" + value, e);

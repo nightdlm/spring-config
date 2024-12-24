@@ -20,6 +20,10 @@ import java.util.Objects;
 
 public class AnnotationConfiguration implements BeanPostProcessor {
 
+    private static final String SERVER_NAME = "spring.config.dynamic.server-name";
+    private static final String BASE_URL = "spring.config.dynamic.base-url";
+    private static final String ENABLE_REMOTE = "spring.config.dynamic.enable-remote";
+
     @Autowired
     private Environment environment;
 
@@ -38,29 +42,25 @@ public class AnnotationConfiguration implements BeanPostProcessor {
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         if (bean.getClass().isAnnotationPresent(UnityClass.class)) {
-            boolean isRemote = Boolean.parseBoolean(environment.getProperty("spring.config.dynamic.enable-remote", "false"));
+            boolean isRemote = Boolean.parseBoolean(environment.getProperty(ENABLE_REMOTE, "false"));
             Map<String, String> hashMap = new HashMap<>();
             if (isRemote) {
-                 String servername = environment.getProperty("spring.config.dynamic.server-name");
+                 String servername = environment.getProperty(SERVER_NAME);
                  if (servername ==null || Objects.equals(servername.trim(), ""))
-                     throw new RuntimeException("spring.config.dynamic.server-name"+" must exists");
+                     throw new RuntimeException(SERVER_NAME+" must exists");
 
-                 String baseUrl = environment.getProperty("spring.config.dynamic.base-url");
+                 String baseUrl = environment.getProperty(BASE_URL);
                  if (baseUrl==null)
-                     throw new RuntimeException("spring.config.dynamic.base-url"+" must exists");
-                ResponseParam param = new ResponseParam();
+                     throw new RuntimeException(BASE_URL+" must exists");
+                ResponseParam param;
                 final RestTemplate restTemplate = new RestTemplate();
                 try {
                      param=restTemplate.getForObject(baseUrl + "/api/v1/getAllValue?serviceName=" + servername, ResponseParam.class);
                  } catch (Exception e) {
-                     e.printStackTrace();
-                     System.out.println("请确认"+baseUrl+"的正确性");
-                 }
-                 if (param==null)
                      throw new RuntimeException("请确认"+baseUrl+"的正确性");
-                 if (param.getCode()!=0)
-                     throw new RuntimeException(param.getMessage());
+                 }
                  // 远程查询服务
+                assert param != null;
                 hashMap.putAll(param.getData());
              }
             for (Field field : bean.getClass().getDeclaredFields()) {
