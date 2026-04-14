@@ -22,8 +22,9 @@ axios.interceptors.response.use(
         if (response.data.code === 0) {
             return response;
         } else {
-            console.log(response.data)
+            // console.log(response.data)
             ElMessage.error(response.data.message || '请求失败');
+            return Promise.reject(new Error(response.data.message || '请求失败'));
         }
     }, (error) => {
         const message = error.response?.data?.message || error.message || '请求异常';
