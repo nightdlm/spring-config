@@ -1,12 +1,14 @@
 package io.spring.config.controller;
 
-import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.spring.config.domain.SpringConfig;
 import io.spring.config.request.UpdateConfig;
 import io.spring.config.response.ApiResponse;
 import io.spring.config.service.IServerConfigService;
 import io.spring.config.service.ISpringConfigService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +23,10 @@ import java.util.List;
 @Valid
 @CrossOrigin
 public class ServerValueController {
+    
+    private static final Logger logger = LoggerFactory.getLogger(ServerValueController.class);
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+    
     @Autowired
     private ISpringConfigService iSpringConfigService;
 
@@ -63,6 +69,7 @@ public class ServerValueController {
         config.setUpdateTime(LocalDateTime.now());
         config.setDescription(updateConfig.getDesc());
         iSpringConfigService.saveOrUpdate(config);
+        logger.info("Config updated: serverId={}, key={}", updateConfig.getServerId(), updateConfig.getKey());
         return ApiResponse.success();
     }
 
@@ -72,7 +79,15 @@ public class ServerValueController {
         SpringConfig springConfig = iSpringConfigService.getById(id);
         HashMap<String, String> map = new HashMap<>();
         map.put(springConfig.getConfigKey(), springConfig.getValue());
-        redisTemplate.convertAndSend(iServerConfigService.getById(springConfig.getServerId()).getServerName(),JSON.toJSONString(map));
+        try {
+            String serverName = iServerConfigService.getById(springConfig.getServerId()).getServerName();
+            String jsonMessage = objectMapper.writeValueAsString(map);
+            redisTemplate.convertAndSend(serverName, jsonMessage);
+            logger.info("Published config to Redis channel {}: {}", serverName, jsonMessage);
+        } catch (Exception e) {
+            logger.error("Failed to publish config to Redis", e);
+            throw new RuntimeException("发布配置失败", e);
+        }
         return ApiResponse.success();
     }
 

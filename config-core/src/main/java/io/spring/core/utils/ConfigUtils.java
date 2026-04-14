@@ -1,12 +1,16 @@
 package io.spring.core.utils;
 
-import com.alibaba.fastjson2.JSON;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
 public class ConfigUtils {
+
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     //基础类型转换
     public static void convert(Field field, String value ) {
@@ -33,15 +37,18 @@ public class ConfigUtils {
             } else if (targetType == Byte.class || targetType == byte.class) {
                 field.setByte(null,Byte.parseByte(value));
             } else if (targetType == List.class) {
-                field.set(null, JSON.parseObject(value,List.class));
+                field.set(null, objectMapper.readValue(value, new TypeReference<List<Object>>() {}));
             } else if (targetType == Map.class) {
-                field.set(null,JSON.parseObject(value,Map.class));
+                field.set(null, objectMapper.readValue(value, new TypeReference<Map<String, Object>>() {}));
             }
             else {
                 throw new IllegalArgumentException("Unsupported target type: " + targetType);
             }
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Invalid value for type " + targetType + ": " + field.getName() + ":" + value, e);
+        }
+        catch (JsonProcessingException e) {
+            throw new IllegalArgumentException("Invalid JSON value for type " + targetType + ": " + field.getName() + ":" + value, e);
         }
         catch (Exception e) {
             throw new RuntimeException("Invalid value for type " + targetType + ": " + field.getName() + ":" + value, e);

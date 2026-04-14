@@ -1,7 +1,10 @@
 package io.spring.core.component;
 
-import com.alibaba.fastjson2.JSON;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.spring.core.utils.ConfigUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -15,11 +18,13 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 
 import javax.annotation.Resource;
 import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.Map;
 
 @ConditionalOnProperty(prefix = "spring.config.dynamic",name = "enable-remote",havingValue = "true")
 public class RedisMessageListener implements MessageListener {
+
+    private static final Logger logger = LoggerFactory.getLogger(RedisMessageListener.class);
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     private Environment environment;
@@ -31,13 +36,21 @@ public class RedisMessageListener implements MessageListener {
     public void onMessage(Message message, byte[] pattern) {
         try {
             String body = new String(message.getBody());
-            Map parseObject = JSON.parseObject(body, Map.class);
-            Map.Entry<String, Object> entry = (Map.Entry<String, Object>) parseObject.entrySet().iterator().next();
-            if (contentManager.getOrDefault(entry.getKey(),null)==null) return;
+            logger.debug("Received redis message: {}", body);
+            
+            Map<String, Object> parseObject = objectMapper.readValue(body, new TypeReference<Map<String, Object>>() {});
+            Map.Entry<String, Object> entry = parseObject.entrySet().iterator().next();
+            
+            if (contentManager.getOrDefault(entry.getKey(),null)==null) {
+                logger.debug("No field found for key: {}", entry.getKey());
+                return;
+            }
+            
             Field field = contentManager.get(entry.getKey());
-            ConfigUtils.convert(field,entry.getValue().toString());
-        }catch (Exception e) {
-            e.printStackTrace();
+            ConfigUtils.convert(field, entry.getValue().toString());
+            logger.info("Successfully updated config field: {} = {}", entry.getKey(), entry.getValue());
+        } catch (Exception e) {
+            logger.error("Failed to process redis message", e);
         }
     }
 

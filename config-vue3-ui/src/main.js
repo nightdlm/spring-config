@@ -6,9 +6,13 @@ import 'element-plus/dist/index.css'
 import router from "@/js/router";
 const app = createApp(App);
 import { ElMessage } from 'element-plus'
+
+// 使用环境变量配置API基础URL
+const API_BASE_URL = process.env.VUE_APP_API_BASE_URL || 'http://localhost:27369';
+
 axios.interceptors.request.use(
     config => {
-        config.baseURL = 'http://localhost:27369';
+        config.baseURL = API_BASE_URL;
         return config;
     }
 )
@@ -19,12 +23,15 @@ axios.interceptors.response.use(
             return response;
         } else {
             console.log(response.data)
-            ElMessage.error(response.data.message);
+            ElMessage.error(response.data.message || '请求失败');
         }
-    }, () => {
-        ElMessage.error("请求异常");
+    }, (error) => {
+        const message = error.response?.data?.message || error.message || '请求异常';
+        ElMessage.error(message);
+        return Promise.reject(error);
     }
 )
+
 app.config.globalProperties.$axios = axios;
 app.use(ElementPlus)
     .use(router)
