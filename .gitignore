@@ -32,3 +32,4 @@ build/
 
 ### VS Code ###
 .vscode/
+/config-vue3-ui/package-lock.json
