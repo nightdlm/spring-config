@@ -19,13 +19,17 @@
         <el-icon><User /></el-icon>
         <span>用户管理</span>
       </el-menu-item>
+      <el-menu-item index="RoleManager" v-if="isAdmin">
+        <el-icon><UserFilled /></el-icon>
+        <span>角色管理</span>
+      </el-menu-item>
     </el-menu>
   </div>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue';
-import { Setting, Document, User } from '@element-plus/icons-vue';
+import { Setting, Document, User, UserFilled } from '@element-plus/icons-vue';
 
 const emit = defineEmits(['update-name-view']);
 const activeIndex = ref('ServerManager');

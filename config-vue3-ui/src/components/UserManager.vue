@@ -156,14 +156,14 @@ const changePasswordForm = reactive({
 
 const roles = ref([])
 
-// const loadRoles = async () => {
-//   try {
-//     const res = await axios.get('/api/role/list')
-//     roles.value = res.data.data || []
-//   } catch (error) {
-//     console.error('获取角色列表失败', error)
-//   }
-// }
+const loadRoles = async () => {
+  try {
+    const res = await axios.get('/api/role/list')
+    roles.value = res.data.data || []
+  } catch (error) {
+    console.error('获取角色列表失败', error)
+  }
+}
 
 const createRules = {
   username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
@@ -310,6 +310,7 @@ onMounted(() => {
   const user = localStorage.getItem('user')
   if (user) {
     currentUser.value = JSON.parse(user)
+    loadRoles()
     loadUserList()
   }
 })

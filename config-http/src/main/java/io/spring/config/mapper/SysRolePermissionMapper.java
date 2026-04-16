@@ -2,10 +2,9 @@ package io.spring.config.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import io.spring.config.domain.SysRolePermission;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.*;
+
+import java.util.List;
 
 @Mapper
 public interface SysRolePermissionMapper extends BaseMapper<SysRolePermission> {
@@ -26,4 +25,10 @@ public interface SysRolePermissionMapper extends BaseMapper<SysRolePermission> {
             "</foreach>" +
             "</script>")
     int batchInsert(@Param("roleId") Integer roleId, @Param("permissionIds") java.util.List<Integer> permissionIds);
+    
+    /**
+     * 查询角色的权限ID列表
+     */
+    @Select("SELECT permission_id FROM sys_role_permission WHERE role_id = #{roleId}")
+    List<Integer> getPermissionIdsByRoleId(Integer roleId);
 }

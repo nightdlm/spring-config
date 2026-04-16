@@ -70,4 +70,14 @@ public class RoleController {
         sysRoleService.assignPermissions(roleId, permissionIds);
         return ApiResponse.success();
     }
+    
+    /**
+     * 获取角色的权限ID列表
+     */
+    @GetMapping("/permissions/{roleId}")
+    public ApiResponse<List<Integer>> getRolePermissions(@PathVariable Integer roleId, HttpSession session) {
+        authService.validateLogin(session);
+        List<Integer> permissionIds = sysRoleService.getPermissionIdsByRoleId(roleId);
+        return ApiResponse.of(permissionIds);
+    }
 }

@@ -51,4 +51,9 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
             sysRolePermissionMapper.batchInsert(roleId, permissionIds);
         }
     }
+
+    @Override
+    public List<Integer> getPermissionIdsByRoleId(Integer roleId) {
+        return sysRolePermissionMapper.getPermissionIdsByRoleId(roleId);
+    }
 }

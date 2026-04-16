@@ -26,4 +26,9 @@ public interface ISysRoleService extends IService<SysRole> {
      * 为角色分配权限
      */
     void assignPermissions(Integer roleId, List<Integer> permissionIds);
+    
+    /**
+     * 获取角色的权限ID列表
+     */
+    List<Integer> getPermissionIdsByRoleId(Integer roleId);
 }

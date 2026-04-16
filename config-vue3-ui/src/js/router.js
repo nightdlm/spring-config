@@ -21,7 +21,8 @@ const routes = [
                     default: () => import('@/components/ServerManager'),
                     ServerManager: () => import('@/components/ServerManager'),
                     ConfigManager: () => import('@/components/ConfigManager'),
-                    UserManager: () => import('@/components/UserManager')
+                    UserManager: () => import('@/components/UserManager'),
+                    RoleManager: () => import('@/components/RoleManager')
                 }
             }
         ]
