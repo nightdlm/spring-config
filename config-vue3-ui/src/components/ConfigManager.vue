@@ -248,7 +248,7 @@ const rules = {
 
 const getServerList = async () => {
   try {
-    const res = await proxy.$axios.post('/api/getServerList', {});
+    const res = await proxy.$axios.post('/api/config/getServerList', {});
     options.value = res.data.data || [];
   } catch (error) {
     console.error('获取服务列表失败:', error);
@@ -264,7 +264,7 @@ const handleChange = async (id) => {
   
   loading.value = true;
   try {
-    const res = await proxy.$axios.post('/api/getList/' + id, {});
+    const res = await proxy.$axios.post('/api/config/list/' + id, {});
     const data = res.data.data || [];
     total.value = data.length;
     // 简单分页处理
@@ -301,7 +301,7 @@ const submitForm = async () => {
     
     submitting.value = true;
     try {
-      await proxy.$axios.post('/api/updateInfo', {
+      await proxy.$axios.post('/api/config/update', {
         id: form.id || null,
         serverId: value.value,
         key: form.key,
@@ -322,7 +322,7 @@ const submitForm = async () => {
 
 const delDynamicConfig = async (id) => {
   try {
-    await proxy.$axios.delete('/api/delete/' + id);
+    await proxy.$axios.delete('/api/config/delete/' + id);
     ElMessage.success('删除成功');
     await handleChange(value.value);
   } catch (error) {
@@ -342,7 +342,7 @@ const updateConfigInfo = (row) => {
 
 const publishUpdateData = async (id) => {
   try {
-    await proxy.$axios.get('/api/publish/' + id);
+    await proxy.$axios.get('/api/config/publish/' + id);
     ElMessage.success('发布成功');
   } catch (error) {
     console.error('发布失败:', error);
@@ -363,7 +363,7 @@ const handleCurrentChange = (val) => {
 const showHistory = async (row) => {
   currentConfigId.value = row.id;
   try {
-    const res = await proxy.$axios.get(`/api/history/${row.id}`);
+    const res = await proxy.$axios.get(`/api/config/history/${row.id}`);
     historyList.value = res.data.data || [];
     historyDialogVisible.value = true;
   } catch (error) {
@@ -375,7 +375,7 @@ const showHistory = async (row) => {
 // 显示Diff对比
 const showDiff = async (historyRow) => {
   try {
-    const res = await proxy.$axios.get(`/api/diff/${historyRow.id}`);
+    const res = await proxy.$axios.get(`/api/config/diff/${historyRow.id}`);
     diffData.value = res.data.data;
     diffDialogVisible.value = true;
   } catch (error) {
@@ -397,7 +397,7 @@ const rollbackVersion = async (historyRow) => {
       }
     );
     
-    await proxy.$axios.post(`/api/rollback/${historyRow.id}`);
+    await proxy.$axios.post(`/api/config/rollback/${historyRow.id}`);
     ElMessage.success('回滚成功');
     historyDialogVisible.value = false;
     await handleChange(value.value);
