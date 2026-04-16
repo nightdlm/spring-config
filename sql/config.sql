@@ -69,7 +69,7 @@ CREATE TABLE `config_history`
     `server_id`           int(10) unsigned NOT NULL COMMENT '服务ID',
     `config_key`          varchar(255)     NOT NULL COMMENT '配置键',
     `old_value`           text COMMENT '修改前的值',
-    `new_value`           text             NOT NULL COMMENT '修改后的值',
+    `new_value`           text COMMENT '修改后的值',
     `operator_id`         int(10) unsigned NOT NULL COMMENT '操作人ID，关联sys_user表',
     `operator_name`       varchar(50)      NOT NULL COMMENT '操作人姓名',
     `operation_type`      varchar(20)      NOT NULL COMMENT '操作类型：CREATE-创建，UPDATE-更新，DELETE-删除，ROLLBACK-回滚',

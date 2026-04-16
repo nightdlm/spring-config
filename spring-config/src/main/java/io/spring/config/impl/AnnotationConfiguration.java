@@ -70,8 +70,8 @@ public class AnnotationConfiguration implements BeanPostProcessor, ApplicationCo
                 try {
                     // Use injected RestTemplate bean
                     RestTemplate restTemplate = getRestTemplate();
-                    logger.info("Fetching remote config from: {}/api/v1/getAllValue?serviceName={}", baseUrl, servername);
-                    param = restTemplate.getForObject(baseUrl + "/api/v1/getAllValue?serviceName=" + servername, ResponseParam.class);
+                    logger.info("Fetching remote config from: {}/v1/getAllValue?serviceName={}", baseUrl, servername);
+                    param = restTemplate.getForObject(baseUrl + "/v1/getAllValue?serviceName=" + servername, ResponseParam.class);
                  } catch (Exception e) {
                      logger.error("Failed to fetch remote config from {}. Please check the URL.", baseUrl, e);
                      System.out.println("请确认"+baseUrl+"的正确性");

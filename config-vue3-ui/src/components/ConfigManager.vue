@@ -248,7 +248,7 @@ const rules = {
 
 const getServerList = async () => {
   try {
-    const res = await proxy.$axios.post('/api/config/getServerList', {});
+    const res = await proxy.$axios.post('/api/server/getServerList', {});
     options.value = res.data.data || [];
   } catch (error) {
     console.error('获取服务列表失败:', error);

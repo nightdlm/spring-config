@@ -90,7 +90,7 @@ const addServerName = async () => {
   
   adding.value = true;
   try {
-    await proxy.$axios.post('/api/createServer?serverName=' + server_name.value, {});
+    await proxy.$axios.post('/api/server/createServer?serverName=' + server_name.value, {});
     ElMessage.success('添加成功');
     server_name.value = '';
     await getServerList();
@@ -104,7 +104,7 @@ const addServerName = async () => {
 const getServerList = async () => {
   loading.value = true;
   try {
-    const res = await proxy.$axios.post('/api/getServerList', {});
+    const res = await proxy.$axios.post('/api/server/getServerList', {});
     server_list.value = res.data.data || [];
   } catch (error) {
     console.error('获取服务列表失败:', error);
@@ -115,7 +115,7 @@ const getServerList = async () => {
 
 const delServer = async (id) => {
   try {
-    await proxy.$axios.post('/api/deleteServer?id=' + id, {});
+    await proxy.$axios.post('/api/server/deleteServer?id=' + id, {});
     ElMessage.success('删除成功');
     await getServerList();
   } catch (error) {

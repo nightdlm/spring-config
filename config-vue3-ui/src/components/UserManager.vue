@@ -311,7 +311,7 @@ onMounted(() => {
   if (user) {
     currentUser.value = JSON.parse(user)
     loadRoles()
-    loadUserList()
+    // loadUserList()
   }
 })
 
