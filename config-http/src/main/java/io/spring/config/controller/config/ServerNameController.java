@@ -1,4 +1,4 @@
-package io.spring.config.controller;
+package io.spring.config.controller.config;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import io.spring.config.domain.ServerConfig;
@@ -14,8 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
-@CrossOrigin
+@RequestMapping
 public class ServerNameController {
 
     private static final Logger logger = LoggerFactory.getLogger(ServerNameController.class);

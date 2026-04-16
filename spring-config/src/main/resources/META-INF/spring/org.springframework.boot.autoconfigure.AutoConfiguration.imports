@@ -1,0 +1,2 @@
+io.spring.config.impl.AnnotationConfiguration
+io.spring.config.impl.DynamicConfigProperties

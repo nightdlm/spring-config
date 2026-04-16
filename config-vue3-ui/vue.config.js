@@ -5,6 +5,15 @@ module.exports = defineConfig({
   devServer: {
     client: {
       overlay: false
+    },
+    proxy: {
+      '/api': {
+        target: 'http://localhost:27369',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api': ''
+        }
+      }
     }
   }
 })

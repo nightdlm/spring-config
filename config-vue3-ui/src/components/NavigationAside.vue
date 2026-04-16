@@ -15,16 +15,29 @@
         <el-icon><Document /></el-icon>
         <span>配置管理</span>
       </el-menu-item>
+      <el-menu-item index="UserManager" v-if="isAdmin">
+        <el-icon><User /></el-icon>
+        <span>用户管理</span>
+      </el-menu-item>
     </el-menu>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { Setting, Document } from '@element-plus/icons-vue';
+import { ref, computed } from 'vue';
+import { Setting, Document, User } from '@element-plus/icons-vue';
 
 const emit = defineEmits(['update-name-view']);
 const activeIndex = ref('ServerManager');
+
+const isAdmin = computed(() => {
+  const user = localStorage.getItem('user')
+  if (user) {
+    const userInfo = JSON.parse(user)
+    return userInfo.role === 'ADMIN'
+  }
+  return false
+})
 
 const handleSelect = (index) => {
   activeIndex.value = index;

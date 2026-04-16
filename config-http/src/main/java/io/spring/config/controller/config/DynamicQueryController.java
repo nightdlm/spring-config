@@ -1,4 +1,4 @@
-package io.spring.config.controller;
+package io.spring.config.controller.config;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import io.spring.config.domain.ServerConfig;
@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@RequestMapping("/api/v1")
+@RequestMapping("/v1")
 @RestController
 public class DynamicQueryController {
 

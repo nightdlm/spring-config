@@ -54,7 +54,7 @@
         <el-table-column prop="description" label="描述" min-width="150" show-overflow-tooltip/>
         <el-table-column prop="createTime" label="创建时间" width="170" align="center"/>
         <el-table-column prop="updateTime" label="更新时间" width="170" align="center"/>
-        <el-table-column fixed="right" label="操作" width="240" align="center">
+        <el-table-column fixed="right" label="操作" width="320" align="center">
           <template #default="scope">
             <el-button link type="primary" size="small" @click="updateConfigInfo(scope.row)">
               <el-icon><Edit /></el-icon>
@@ -63,6 +63,10 @@
             <el-button link type="success" size="small" @click="publishUpdateData(scope.row.id)">
               <el-icon><Promotion /></el-icon>
               发布
+            </el-button>
+            <el-button link type="warning" size="small" @click="showHistory(scope.row)">
+              <el-icon><Clock /></el-icon>
+              历史
             </el-button>
             <el-popconfirm
               title="确定要删除此配置吗？"
@@ -138,14 +142,62 @@
         </div>
       </template>
     </el-dialog>
+
+    <!-- 历史记录对话框 -->
+    <el-dialog 
+      v-model="historyDialogVisible" 
+      title="配置历史" 
+      width="900px"
+      :close-on-click-modal="false">
+      <el-table :data="historyList" stripe>
+        <el-table-column prop="id" label="版本ID" width="80" />
+        <el-table-column prop="operationType" label="操作类型" width="100">
+          <template #default="scope">
+            <el-tag :type="getOperationTypeTag(scope.row.operationType)">
+              {{ scope.row.operationType }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="operatorName" label="操作人" width="100" />
+        <el-table-column prop="createTime" label="操作时间" width="170" />
+        <el-table-column prop="remark" label="备注" min-width="150" show-overflow-tooltip />
+        <el-table-column label="操作" width="150" align="center">
+          <template #default="scope">
+            <el-button link type="primary" size="small" @click="showDiff(scope.row)">
+              查看差异
+            </el-button>
+            <el-button link type="warning" size="small" @click="rollbackVersion(scope.row)" 
+                       v-if="scope.row.operationType !== 'DELETE'">
+              回滚
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-dialog>
+
+    <!-- Diff对比对话框 -->
+    <el-dialog 
+      v-model="diffDialogVisible" 
+      title="配置差异对比" 
+      width="800px"
+      :close-on-click-modal="false">
+      <div v-if="diffData" class="diff-container">
+        <div class="diff-info">
+          <p><strong>操作类型:</strong> {{ diffData.history.operationType }}</p>
+          <p><strong>操作人:</strong> {{ diffData.history.operatorName }}</p>
+          <p><strong>操作时间:</strong> {{ diffData.history.createTime }}</p>
+        </div>
+        <div class="diff-content" v-html="diffData.htmlDiff"></div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue';
 import { getCurrentInstance } from 'vue';
-import { Document, Plus, Edit, Delete, Promotion, Key } from '@element-plus/icons-vue';
-import { ElMessage } from 'element-plus';
+import { Document, Plus, Edit, Delete, Promotion, Key, Clock } from '@element-plus/icons-vue';
+import { ElMessage, ElMessageBox } from 'element-plus';
 
 const { proxy } = getCurrentInstance();
 
@@ -157,6 +209,15 @@ const submitting = ref(false);
 const dialogVisible = ref(false);
 const isEdit = ref(false);
 const formRef = ref(null);
+
+// 历史记录
+const historyDialogVisible = ref(false);
+const historyList = ref([]);
+const currentConfigId = ref(null);
+
+// Diff对比
+const diffDialogVisible = ref(false);
+const diffData = ref(null);
 
 // 分页
 const currentPage = ref(1);
@@ -298,6 +359,67 @@ const handleCurrentChange = (val) => {
   handleChange(value.value);
 };
 
+// 显示历史记录
+const showHistory = async (row) => {
+  currentConfigId.value = row.id;
+  try {
+    const res = await proxy.$axios.get(`/api/history/${row.id}`);
+    historyList.value = res.data.data || [];
+    historyDialogVisible.value = true;
+  } catch (error) {
+    console.error('获取历史记录失败:', error);
+    ElMessage.error('获取历史记录失败');
+  }
+};
+
+// 显示Diff对比
+const showDiff = async (historyRow) => {
+  try {
+    const res = await proxy.$axios.get(`/api/diff/${historyRow.id}`);
+    diffData.value = res.data.data;
+    diffDialogVisible.value = true;
+  } catch (error) {
+    console.error('获取差异对比失败:', error);
+    ElMessage.error('获取差异对比失败');
+  }
+};
+
+// 回滚版本
+const rollbackVersion = async (historyRow) => {
+  try {
+    await ElMessageBox.confirm(
+      `确定要回滚到版本 ${historyRow.id} 吗？`,
+      '回滚确认',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }
+    );
+    
+    await proxy.$axios.post(`/api/rollback/${historyRow.id}`);
+    ElMessage.success('回滚成功');
+    historyDialogVisible.value = false;
+    await handleChange(value.value);
+  } catch (error) {
+    if (error !== 'cancel') {
+      console.error('回滚失败:', error);
+      ElMessage.error(error.response?.data?.message || '回滚失败');
+    }
+  }
+};
+
+// 获取操作类型标签颜色
+const getOperationTypeTag = (type) => {
+  const typeMap = {
+    'CREATE': 'success',
+    'UPDATE': 'primary',
+    'DELETE': 'danger',
+    'ROLLBACK': 'warning'
+  };
+  return typeMap[type] || 'info';
+};
+
 onMounted(() => {
   getServerList();
 });
@@ -365,5 +487,52 @@ onMounted(() => {
 
 :deep(.el-pagination) {
   padding: 10px 0;
+}
+
+.diff-container {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.diff-info {
+  padding: 15px;
+  background-color: #f5f7fa;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+.diff-info p {
+  margin: 5px 0;
+  color: #606266;
+}
+
+.diff-content {
+  border: 1px solid #dcdfe6;
+  border-radius: 4px;
+  padding: 10px;
+  background-color: #fafafa;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.diff-line {
+  padding: 2px 10px;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.diff-line.added {
+  background-color: #e1f3d8;
+  color: #67c23a;
+}
+
+.diff-line.removed {
+  background-color: #fde2e2;
+  color: #f56c6c;
+}
+
+.diff-line.unchanged {
+  color: #909399;
 }
 </style>

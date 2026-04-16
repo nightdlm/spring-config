@@ -2,14 +2,15 @@
   <div class="common-layout" id="main">
     <el-container class="parent-container">
       <el-header class="header">
-       <ShowHeader/>
+       <ShowHeader :user-info="userInfo" @logout="handleLogout" @change-password="handleChangePassword"/>
       </el-header>
       <el-container class="child_main">
         <el-aside width="200px" class="aside">
           <NavigationAside @update-name-view="updateNameView" />
         </el-aside>
         <el-main class="main-content">
-          <router-view :name="name_view"/>
+          <router-view :name="name_view" />
+          <UserManager v-show="false" ref="userManagerRef" />
         </el-main>
       </el-container>
     </el-container>
@@ -17,15 +18,46 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import NavigationAside from "@/components/NavigationAside";
 import ShowHeader from "@/components/ShowHeader";
+import UserManager from "@/components/UserManager";
+import axios from 'axios';
+import { ElMessage } from 'element-plus';
 
+const router = useRouter()
 const name_view = ref("ServerManager");
+const userInfo = ref(null);
+const userManagerRef = ref(null);
 
 const updateNameView = (name) => {
   name_view.value = name;
 };
+
+onMounted(() => {
+  const user = localStorage.getItem('user')
+  if (user) {
+    userInfo.value = JSON.parse(user)
+  }
+})
+
+const handleLogout = async () => {
+  try {
+    await axios.post('/api/auth/logout')
+    localStorage.removeItem('user')
+    ElMessage.success('已退出登录')
+    router.push('/login')
+  } catch (error) {
+    ElMessage.error('退出失败')
+  }
+}
+
+const handleChangePassword = () => {
+  if (userManagerRef.value) {
+    userManagerRef.value.showChangePasswordDialog()
+  }
+}
 </script>
 
 <style scoped>

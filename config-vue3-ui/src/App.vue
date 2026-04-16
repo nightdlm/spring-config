@@ -1,9 +1,8 @@
 <template>
-    <MainPage />
+    <router-view />
 </template>
 
 <script setup>
-import MainPage from "@/components/MainPage";
 </script>
 
 <style>

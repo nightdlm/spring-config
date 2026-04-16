@@ -1,8 +1,8 @@
 package io.spring.config.request;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-
-import javax.validation.constraints.NotNull;
 
 @Data
 public class UpdateConfig {
@@ -12,10 +12,10 @@ public class UpdateConfig {
     @NotNull(message = "服务id不能为空")
     private Integer serverId;
 
-    @NotNull(message = "key字段不能为空")
+    @NotBlank(message = "key字段不能为空")
     private String key;
 
-    @NotNull(message = "value字段不能为空",groups = {Update.class})
+    @NotBlank(message = "value字段不能为空")
     private String value;
 
     private String desc;

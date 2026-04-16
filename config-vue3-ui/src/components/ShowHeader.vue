@@ -4,18 +4,22 @@
       <h2 class="header-title">动态配置管理系统</h2>
     </div>
     <div class="header-right">
-      <el-dropdown trigger="click">
+      <el-dropdown trigger="click" v-if="userInfo">
         <div class="user-info">
           <el-avatar :size="36" src="@/assets/logo.png" />
-          <span class="username">管理员</span>
+          <span class="username">{{ userInfo.nickname || userInfo.username }}</span>
         </div>
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item disabled>
               <el-icon><User /></el-icon>
-              <span>管理员</span>
+              <span>{{ userInfo.nickname || userInfo.username }}</span>
             </el-dropdown-item>
-            <el-dropdown-item divided disabled>
+            <el-dropdown-item @click="$emit('change-password')">
+              <el-icon><Key /></el-icon>
+              <span>修改密码</span>
+            </el-dropdown-item>
+            <el-dropdown-item divided @click="$emit('logout')">
               <el-icon><SwitchButton /></el-icon>
               <span>退出登录</span>
             </el-dropdown-item>
@@ -27,7 +31,16 @@
 </template>
 
 <script setup>
-import { User, SwitchButton } from '@element-plus/icons-vue';
+import { User, SwitchButton, Key } from '@element-plus/icons-vue';
+
+defineProps({
+  userInfo: {
+    type: Object,
+    default: null
+  }
+})
+
+defineEmits(['logout', 'change-password'])
 </script>
 
 <style scoped>
