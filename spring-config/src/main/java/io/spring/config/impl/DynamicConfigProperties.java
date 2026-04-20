@@ -1,10 +1,13 @@
 package io.spring.config.impl;
 
 import lombok.Data;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Role;
 
 @ConfigurationProperties(prefix = "spring.config.dynamic")
 @Data
+@Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 public class DynamicConfigProperties {
 
     /**

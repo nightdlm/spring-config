@@ -4,15 +4,17 @@ import io.spring.config.annotation.DynamicConfig;
 import io.spring.config.annotation.UnityClass;
 import io.spring.config.response.ResponseParam;
 import io.spring.core.utils.ConfigUtils;
-import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Role;
 import org.springframework.core.env.Environment;
 import org.springframework.web.client.RestTemplate;
 
@@ -25,16 +27,19 @@ import java.util.Objects;
 
 
 @Configuration
+@Role(BeanDefinition.ROLE_INFRASTRUCTURE)
+@EnableConfigurationProperties(DynamicConfigProperties.class)
 public class AnnotationConfiguration implements BeanPostProcessor, ApplicationContextAware {
 
     private static final Logger logger = LoggerFactory.getLogger(AnnotationConfiguration.class);
     private static ApplicationContext applicationContext;
+    private final Environment environment;
+    private final DynamicConfigProperties dynamicConfigProperties;
 
-    @Resource
-    private Environment environment;
-
-    @Resource
-    private DynamicConfigProperties dynamicConfigProperties;
+    public AnnotationConfiguration(Environment environment, DynamicConfigProperties dynamicConfigProperties) {
+        this.environment = environment;
+        this.dynamicConfigProperties = dynamicConfigProperties;
+    }
 
     private static final Map<String, Field> contentManager = new HashMap<>();
 
