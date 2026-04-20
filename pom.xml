@@ -43,6 +43,9 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <spring-boot.version>3.2.4</spring-boot.version>
         <sno.serviceId>config-spring</sno.serviceId>
+        <core.version>1.0.0</core.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
     </properties>
 
     <dependencies>
@@ -55,27 +58,16 @@
 
     <dependencyManagement>
         <dependencies>
-            <!-- Remove explicit spring-web version, let spring-boot manage it -->
-            <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
-                <version>3.5.5</version>
-            </dependency>
-            <dependency>
-                <groupId>com.mysql</groupId>
-                <artifactId>mysql-connector-j</artifactId>
-                <version>8.0.33</version>
-            </dependency>
             <!-- Jackson is managed by spring-boot-dependencies -->
             <dependency>
                 <groupId>io.github.nightdlm</groupId>
                 <artifactId>dynamic-spring-boot-config</artifactId>
-                <version>1.0.0</version>
+                <version>${core.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.github.nightdlm</groupId>
                 <artifactId>config-core</artifactId>
-                <version>1.0.0</version>
+                <version>${core.version}</version>
             </dependency>
 
             <dependency>
@@ -105,66 +97,63 @@
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <version>${spring-boot.version}</version>
                 </plugin>
-                <!--   central发布插件    -->
-                <plugin>
-                    <groupId>org.sonatype.central</groupId>
-                    <artifactId>central-publishing-maven-plugin</artifactId>
-                    <version>0.4.0</version>
-                    <extensions>true</extensions>
-                    <configuration>
-                        <publishingServerId>${sno.serviceId}</publishingServerId>
-                        <tokenAuth>true</tokenAuth>
-                    </configuration>
-                </plugin>
-                <!--   source源码插件 -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-source-plugin</artifactId>
-                    <version>2.2.1</version>
-                    <executions>
-                        <execution>
-                            <id>attach-sources</id>
-                            <goals>
-                                <goal>jar-no-fork</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <!--   javadoc插件 -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>2.9.1</version>
-                    <executions>
-                        <execution>
-                            <id>attach-javadocs</id>
-                            <goals>
-                                <goal>jar</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-gpg-plugin</artifactId>
-                    <version>1.5</version>
-                    <configuration>
-<!--                        <skip>true</skip>-->
-                        <keyname>dengliming</keyname>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>sign-artifacts</id>
-                            <phase>verify</phase>
-                            <goals>
-                                <goal>sign</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
 
             </plugins>
     </build>
+
+    <profiles>
+        <!-- Release profile with GPG signing -->
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <!-- Source plugin -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>2.2.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- Javadoc plugin -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.9.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- GPG signing plugin -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.5</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <distributionManagement>
         <snapshotRepository>

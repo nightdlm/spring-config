@@ -1,8 +1,10 @@
 package io.spring.config.impl;
 
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "spring.config.dynamic")
+@Data
 public class DynamicConfigProperties {
 
     /**
@@ -20,27 +22,6 @@ public class DynamicConfigProperties {
      */
     private String baseUrl;
 
-    public String getBaseUrl() {
-        return baseUrl;
-    }
 
-    public void setBaseUrl(String baseUrl) {
-        this.baseUrl = baseUrl;
-    }
-
-    public String getServerName() {
-        return serverName;
-    }
-
-    public void setServerName(String serverName) {
-        this.serverName = serverName;
-    }
-
-    public Boolean getEnableRemote() {
-        return enableRemote;
-    }
-
-    public void setEnableRemote(Boolean enableRemote) {
-        this.enableRemote = enableRemote;
-    }
+    private String serverApi = "/v1/getAllValue";
 }

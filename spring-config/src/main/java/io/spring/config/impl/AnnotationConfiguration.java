@@ -4,16 +4,18 @@ import io.spring.config.annotation.DynamicConfig;
 import io.spring.config.annotation.UnityClass;
 import io.spring.config.response.ResponseParam;
 import io.spring.core.utils.ConfigUtils;
+import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.web.client.RestTemplate;
+
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -22,13 +24,17 @@ import java.util.Map;
 import java.util.Objects;
 
 
+@Configuration
 public class AnnotationConfiguration implements BeanPostProcessor, ApplicationContextAware {
 
     private static final Logger logger = LoggerFactory.getLogger(AnnotationConfiguration.class);
     private static ApplicationContext applicationContext;
 
-    @Autowired
+    @Resource
     private Environment environment;
+
+    @Resource
+    private DynamicConfigProperties dynamicConfigProperties;
 
     private static final Map<String, Field> contentManager = new HashMap<>();
 
@@ -55,14 +61,13 @@ public class AnnotationConfiguration implements BeanPostProcessor, ApplicationCo
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         if (bean.getClass().isAnnotationPresent(UnityClass.class)) {
-            boolean isRemote = Boolean.parseBoolean(environment.getProperty("spring.config.dynamic.enable-remote", "false"));
             Map<String, String> hashMap = new HashMap<>();
-            if (isRemote) {
-                 String servername = environment.getProperty("spring.config.dynamic.server-name");
+            if (dynamicConfigProperties.getEnableRemote()) {
+                 String servername = dynamicConfigProperties.getServerName();
                  if (servername ==null || Objects.equals(servername.trim(), ""))
                      throw new RuntimeException("spring.config.dynamic.server-name"+" must exists");
 
-                 String baseUrl = environment.getProperty("spring.config.dynamic.base-url");
+                 String baseUrl = dynamicConfigProperties.getBaseUrl();
                  if (baseUrl==null)
                      throw new RuntimeException("spring.config.dynamic.base-url"+" must exists");
                 
@@ -70,11 +75,10 @@ public class AnnotationConfiguration implements BeanPostProcessor, ApplicationCo
                 try {
                     // Use injected RestTemplate bean
                     RestTemplate restTemplate = getRestTemplate();
-                    logger.info("Fetching remote config from: {}/v1/getAllValue?serviceName={}", baseUrl, servername);
-                    param = restTemplate.getForObject(baseUrl + "/v1/getAllValue?serviceName=" + servername, ResponseParam.class);
+                    logger.info("Fetching remote config from: {}{}?serviceName={}", baseUrl, dynamicConfigProperties.getServerApi(), servername);
+                    param = restTemplate.getForObject(baseUrl + dynamicConfigProperties.getServerApi() + "?serviceName=" + servername, ResponseParam.class);
                  } catch (Exception e) {
                      logger.error("Failed to fetch remote config from {}. Please check the URL.", baseUrl, e);
-                     System.out.println("请确认"+baseUrl+"的正确性");
                  }
                  if (param==null)
                      throw new RuntimeException("请确认"+baseUrl+"的正确性");
