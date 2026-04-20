@@ -25,6 +25,8 @@ public class DynamicConfigProperties {
      */
     private String baseUrl;
 
+    private Boolean isSSL = false;
+
 
     private String serverApi = "/v1/getAllValue";
 }

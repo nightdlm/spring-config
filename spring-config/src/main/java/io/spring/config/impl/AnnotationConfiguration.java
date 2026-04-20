@@ -68,30 +68,30 @@ public class AnnotationConfiguration implements BeanPostProcessor, ApplicationCo
         if (bean.getClass().isAnnotationPresent(UnityClass.class)) {
             Map<String, String> hashMap = new HashMap<>();
             if (dynamicConfigProperties.getEnableRemote()) {
-                 String servername = dynamicConfigProperties.getServerName();
-                 if (servername ==null || Objects.equals(servername.trim(), ""))
-                     throw new RuntimeException("spring.config.dynamic.server-name"+" must exists");
+                String servername = dynamicConfigProperties.getServerName();
+                if (servername == null || Objects.equals(servername.trim(), ""))
+                    throw new RuntimeException("spring.config.dynamic.server-name" + " must exists");
 
-                 String baseUrl = dynamicConfigProperties.getBaseUrl();
-                 if (baseUrl==null)
-                     throw new RuntimeException("spring.config.dynamic.base-url"+" must exists");
-                
-                ResponseParam param = new ResponseParam();
+                String baseUrl = dynamicConfigProperties.getBaseUrl();
+                if (baseUrl == null)
+                    throw new RuntimeException("spring.config.dynamic.base-url" + " must exists");
+                baseUrl = dynamicConfigProperties.getIsSSL() ? "https://" : "http://" + baseUrl.trim();
+                ResponseParam param = null;
                 try {
                     // Use injected RestTemplate bean
                     RestTemplate restTemplate = getRestTemplate();
                     logger.info("Fetching remote config from: {}{}?serviceName={}", baseUrl, dynamicConfigProperties.getServerApi(), servername);
                     param = restTemplate.getForObject(baseUrl + dynamicConfigProperties.getServerApi() + "?serviceName=" + servername, ResponseParam.class);
-                 } catch (Exception e) {
-                     logger.error("Failed to fetch remote config from {}. Please check the URL.", baseUrl, e);
-                 }
-                 if (param==null)
-                     throw new RuntimeException("请确认"+baseUrl+"的正确性");
-                 if (param.getCode()!=0)
-                     throw new RuntimeException(param.getMessage());
-                 // 远程查询服务
+                } catch (Exception e) {
+                    logger.error("Failed to fetch remote config from {}.", baseUrl, e);
+                }
+                if (param == null)
+                    throw new RuntimeException("网络异常，无法访问配置中心");
+                if (param.getCode() != 0)
+                    throw new RuntimeException("远端配置中心提示：" + param.getMessage());
+                // 远程查询服务
                 hashMap.putAll(param.getData());
-             }
+            }
             for (Field field : bean.getClass().getDeclaredFields()) {
                 if (Modifier.isPrivate(field.getModifiers()))
                     throw new RuntimeException("\"" + field.getName() + "\" 字段必须为public");
@@ -103,7 +103,7 @@ public class AnnotationConfiguration implements BeanPostProcessor, ApplicationCo
                         throw new RuntimeException("\"" + field.getName() + "\" 字段key未配置");
                     if (!config_properties.contains(":")) {
                         //远程查询值，存在就直接用
-                        if (hashMap.getOrDefault(config_properties, null)!=null){
+                        if (hashMap.getOrDefault(config_properties, null) != null) {
                             ConfigUtils.convert(field, hashMap.get(config_properties));
                             logger.debug("Set field {} with remote value", field.getName());
                         } else {
@@ -116,7 +116,7 @@ public class AnnotationConfiguration implements BeanPostProcessor, ApplicationCo
                     } else {
                         final String key = config_properties.substring(0, config_properties.indexOf(":"));
                         //远程查询值，存在就直接用
-                        if (hashMap.getOrDefault(key, null)!=null){
+                        if (hashMap.getOrDefault(key, null) != null) {
                             ConfigUtils.convert(field, hashMap.get(key));
                             logger.debug("Set field {} with remote value (with default)", field.getName());
                         } else {
