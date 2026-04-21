@@ -47,30 +47,6 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 处理运行时异常（包括自定义的业务异常）
-     */
-    @ExceptionHandler(RuntimeException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ApiResponse<Void> handleRuntimeException(RuntimeException e) {
-        String message = e.getMessage();
-        
-        // 根据异常消息判断返回的状态码
-        if (message != null) {
-            if (message.contains("请先登录") || message.contains("未登录")) {
-                logger.warn("未授权访问: {}", message);
-                return ApiResponse.error(401, message);
-            } else if (message.contains("无权限") || message.contains("不能删除") || 
-                       message.contains("已存在")) {
-                logger.warn("禁止访问: {}", message);
-                return ApiResponse.error(403, message);
-            }
-        }
-        
-        logger.error("服务器内部错误: ", e);
-        return ApiResponse.error(500, message != null ? message : "服务器内部错误");
-    }
-
-    /**
      * 处理非法参数异常
      */
     @ExceptionHandler(IllegalArgumentException.class)

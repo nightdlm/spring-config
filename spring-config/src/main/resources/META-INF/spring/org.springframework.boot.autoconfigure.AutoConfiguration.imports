@@ -1,1 +1,2 @@
 io.spring.config.impl.AnnotationConfiguration
+io.spring.core.component.RedisMessageListener
