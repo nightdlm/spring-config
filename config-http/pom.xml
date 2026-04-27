@@ -39,13 +39,11 @@
             <version>3.5.5</version>
         </dependency>
 
-        <!-- MySQL Driver -->
+<!--添加mariadb驱动-->
         <dependency>
-            <groupId>com.mysql</groupId>
-            <artifactId>mysql-connector-j</artifactId>
-            <version>8.3.0</version>
+            <groupId>org.mariadb.jdbc</groupId>
+            <artifactId>mariadb-java-client</artifactId>
         </dependency>
-
         <!-- Spring Session Redis -->
         <dependency>
             <groupId>org.springframework.session</groupId>
